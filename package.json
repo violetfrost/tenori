@@ -1,0 +1,19 @@
+{
+  "name": "tenori",
+  "version": "1.0.0",
+  "description": "A cross-platform desktop app based on Electron, designed to make learning Kanji easier. 🦔",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron .",
+    "sorter": "node sorter.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/violetfrost/tenori.git"
+  },
+  "author": "Violet Frost",
+  "license": "GPLV3",
+  "devDependencies": {
+    "electron": "^22.0.0"
+  }
+}

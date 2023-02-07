@@ -1,0 +1,246 @@
+/* html/body Boilerplate */
+
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
+}
+
+*:focus {
+    outline: none;
+    box-shadow: 0 0 3pt 2pt #00AFFF;
+}
+
+html,body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background-color: #f9f9f9;
+}
+
+/* Fonts and Text */
+
+@font-face {
+    font-family: "DM Sans";
+    src: url("./DMSans-Bold.ttf");
+}
+
+@font-face {
+    font-family: "IBM Plex Mono";
+    src: url("./IBMPlexMono-Regular.ttf");
+}
+
+h1,h2,h3,h4,h5,h6
+{
+    font-family: "DM Sans";
+}
+
+p,a,label {
+    font-family: "IBM Plex Mono";
+}
+
+.study-character {
+    font-size: 100px;
+    line-height: 0px;
+}
+
+.study-sub {
+    font-size: 25px;
+}
+
+.textbox-manager {
+    width: 100%;
+    height: 250px;
+}
+
+.content-divider {
+    height: 1px;
+    width: 100%;
+    background-color: #000000;
+}
+
+
+/* Redesign 1 */
+
+.rd-layout-nav {
+    width: 90px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0px;
+    height: calc(100vh);
+    padding: 10px 5px 10px 10px;
+}
+
+.rd-layout-main {
+    width: calc(100vw - 90px);
+    margin-left: 90px;
+    padding: 10px;
+    height: calc(100vh);
+}
+
+.rd-panel { 
+    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+    outline: 1px solid #e2e2e2;
+    background-color: #ffffff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: grid;
+}
+
+.rd-panel::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+.rd-panel.rd-panel-nav {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align: center;
+}
+
+.rd-content {
+    margin: 0 auto;
+    max-width: 600px;
+    width: 100%;
+    padding: 10px;
+    grid-column: 1;
+    grid-row: 1;
+    -webkit-transition: opacity 0.5s, visibility 0.5s;
+    -moz-transition: opacity 0.5s, visibility 0.5s;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.rd-input {
+    background-color: transparent;
+    padding: 0px;
+    font-size: 16px;
+    border-width: 1px;
+    border-color: #000000;
+    color: #000000;
+    border-style: solid;
+    font-family: "IBM Plex Mono";
+}
+
+.rd-input.rd-study {
+    height: 60px;
+    width: 60%;
+    text-align: center;
+}
+
+.rd-input.rd-study-mnemonics {
+    background-color: transparent;
+    outline: 3px solid #000000;
+    color: #000000;
+    border: none;
+    font-family: "IBM Plex Mono";
+    width: 50%;    
+    height: 30px;
+    margin: 5px;
+    vertical-align: top;
+    resize: none;
+    text-align: center;
+}
+
+.rd-input.rd-study-config {
+    width: 100%;
+    resize: none;
+}
+
+.rd-content.centered-vh {
+    align-self:center;
+    text-align: center;
+}
+
+.rd-content.centered {
+    text-align: center;
+}
+
+.rd-align-left {
+    text-align: left;
+}
+
+.rd-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 250px;
+    grid-gap: 10px;
+ }
+
+.rd-grid-container>.rd-panel {
+    padding: 15px;
+    display: inline-block;
+}
+
+.rd-study-config-kanji {
+    line-height: 10px;
+}
+
+.rd-grid-container>.rd-panel>.content-divider {
+    margin-bottom: 5px;
+}
+
+.rd-content.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.rd-content.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rd-nav-buttons {
+    display: inline-block;
+}
+
+.rd-layout-nav>.rd-panel>.rd-nav-buttons>button {
+    width: 90%;
+    aspect-ratio: 1/1;
+}
+
+.rd-button {
+    background-color: transparent;
+    outline: 3px solid #000000;
+    color: #000000;
+    border: none;
+    font-family: "DM Sans";
+    width: 100px;
+    height: 30px;
+    margin: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+    html,body {
+        background-color: #1f1f1f;
+    }
+    h1,h2,h3,h4,h5,h6,p,a,label {
+        color: #ffffff;
+    }
+    .content-divider {
+        background-color: #ffffff;;
+    }
+    .textbox-manager {
+        background-color: #1f1f1f;
+        color: #FFFFFF; 
+    }
+    .rd-panel {
+        outline: 1px solid #3e3e3e;
+        background-color: #282828;
+    }
+    .rd-grid-container>.rd-panel {
+        background-color: #181818;
+    }
+    .rd-input {
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+    }
+    .rd-button,.rd-input.rd-study-mnemonics{
+        outline: 3px solid #FFFFFF;
+        color: #FFFFFF;    
+    }
+}

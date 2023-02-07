@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tenori</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src data: https://kanjiapi.dev 'self'; script-src 'unsafe-inline' 'self'; style-src 'unsafe-inline' 'self'">
+        <link rel="stylesheet" href="assets/tenori.css">
+    </head>
+    <body>
+        <main>
+            <div class="rd-layout-nav">
+                <div class="rd-panel rd-panel-nav">
+                    <!--Navbar-->
+                    <div class="rd-nav-buttons">
+                        <button type="button" id="btn-home" onclick="SwapPage('page-home');">Home</button>
+                        <button type="button" id="btn-study" onclick="SwapPage('page-study');">Study</button>
+                        <button type="button" id="btn-deck-manager" onclick="SwapPage('page-deck-manager');">Deck Mgr</button>
+                        <button type="button" id="btn-app-settings" onclick="SwapPage('page-settings');">Settings</button>
+                    </div>
+                </div>
+            </div>
+            <div class="rd-layout-main">
+                <div class="rd-panel">
+                    <div class="rd-content hidden" id="page-study" data-preload="StudyPreload">
+                        <h1>Study</h1>
+                        <div class="content-divider"></div>
+                        <p>Here is a list of currently available decks. If you don't see a deck, ensure it is inside your decks folder.</p>
+                        <div id="study-picker-container">
+
+                        </div>
+                    </div>
+                    <div class="rd-content centered-vh hidden" id="page-study-quiz" data-preload="StudyQuizPreload">
+                        <h3 id="study-char" class="study-character">Kanji</h3>
+                        <h3 id="study-definition" class="study-sub">Kanji Meaning</h3>
+                        <h3 id="study-reading" class="study-sub">Kanji Reading</h3>
+                        <input id="study-input" class ="rd-study rd-input" type="text" placeholder="Romaji or Kana"></input>
+                    </div>
+                    <div class="rd-content centered-vh hidden" id="page-study-upnext-meanings">
+                        <h1>Up Next</h1>
+                        <div class="content-divider"></div>
+                        <div class="rd-align-left">
+                            <p>You'll be shown each kanji along with its meaning and the previously chosen mnemonic. Take a good look at each, and try to remember it! Make note of the mnemonic.</p>
+                            <button class="rd-button" onclick="StudyBeginMeaningsFlow()">Let's go!</button>
+                        </div>
+                    </div>
+                    <div class="rd-content centered-vh hidden" id="page-study-mnemonics">
+                        <h3 id="study-char" class="study-character">Kanji</h3>
+                        <h3 id="study-cha-sub" class="study-sub">Kanji Meaning OR Reading</h3>
+                        <h3 id="study-mnemonic" class="study-sub">Kanji Mnemonic</h3>
+                        <button class="rd-button">Previous</button>
+                        <input class="rd-input rd-study-mnemonics" placeholder="Meaning"></input>
+                    </div>
+                    <div class="rd-content centered hidden" id="page-study-config" data-preload="StudyConfigPreload">
+                        <h1>Study</h1>
+                        <div class="content-divider"></div>
+                        <div class="rd-align-left">
+                            <p>Displayed below are the kanji you will be learning in this session. Before continuing, take some time to create engaging mnemonics, if they aren't provided by this deck. Additionally, select which meanings and readings you'd like to learn.</p>
+                            <p>When you're ready, click the start button below to begin!</p>
+                        </div>
+                        <div class="rd-grid-container" id="study-configurator-panels">
+                            <!--Kanji grid-->
+                        </div>
+                        <div class="rd-align-left" style="margin-top: 10px;">
+                            <button class="rd-button" onclick="StudySubmitConfigurator()">Let's go!</button>
+                        </div>
+                    </div>
+                    <div class="rd-content hidden" id="page-deck-manager" data-preload="DeckManagerPreload">
+                        <h1>Deck Manager</h1>
+                        <p>Create, import, and export study decks here.</p>
+                        <div class="content-divider"></div>
+                        <h3>Create a Deck</h3>
+                        <p>Create a deck from any Japanese text, ordered from most to least common kanji.</p>
+                        <textarea class="textbox-manager" id="mgr-jp-text" placeholder="Paste any Japanese text here..."></textarea>
+                        <button onclick="ManagerCreateDeckFromBox()">Create Deck</button>
+                    </div>
+                    <div class="rd-content hidden" id="page-settings" data-preload="SettingsPreload">
+                        <h1>Settings Page</h1>
+                    </div>
+                    <div class="rd-content hidden" id="page-home">
+                        <h1>Home Page</h1>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="scripts/rendererUtils.js"></script>
+        <script src="scripts/manager.js"></script>
+        <script src="scripts/study.js"></script>
+        <script src="scripts/navigation.js"></script>
+    </body>
+</html>
