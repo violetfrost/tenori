@@ -30,7 +30,6 @@ window.StudyPreload = async function()
     await window.tenori.getPrefs().then(async prefs => {
         await window.tenori.listDecks(prefs.app.deckFolder).then(result => {
             StudyPopulatePicker(result)
-            console.log(result);
         })
     })
     return false;

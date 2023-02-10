@@ -15,5 +15,8 @@
   "license": "GPLV3",
   "devDependencies": {
     "electron": "^22.0.0"
+  },
+  "dependencies": {
+    "jsonschema": "^1.4.1"
   }
 }

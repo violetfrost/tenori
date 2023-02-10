@@ -1,3 +1,5 @@
+const Validator = require('jsonschema').Validator;
+
 module.exports = {
     getKanjiFromString: function(string) //Returns a new string with just the kanji from the provided string.
     {
@@ -37,5 +39,15 @@ module.exports = {
         }
     
         return counts.reverse() //Return reverse of the sort
+    },
+    validateJsonAgainstSchema: function(data, schema)
+    {
+        var validator = new Validator();
+        try {
+            validator.validate(data, schema, {throwFirst: true})
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 }

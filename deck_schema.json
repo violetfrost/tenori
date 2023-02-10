@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "properties": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "name",
+          "description",
+          "author"
+        ]
+      },
+      "deck": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "char": {
+              "type": "string"
+            },
+            "count": {
+              "type": "integer"
+            },
+            "meaning": {
+              "type": "integer"
+            },
+            "reading": {
+              "type": "integer"
+            },
+            "kunYomi": {
+              "type": "boolean"
+            },
+            "mnemonic": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "char"
+          ]
+        }
+      }
+    },
+    "required": [
+      "properties",
+      "deck"
+    ]
+}
+    

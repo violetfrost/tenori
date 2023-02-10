@@ -3,6 +3,8 @@ const utils = require('./utils.js');
 const fs = require('fs');
 const path = require('path');
 
+const deckSchema = JSON.parse(fs.readFileSync(__dirname + '/deck_schema.json','utf8'));
+
 const createWindow = () => {
     const win = new BrowserWindow({
       width: 1280,
@@ -71,9 +73,15 @@ ipcMain.handle('tenori-load-deck', async (event, args) => {
     }
 
     var data = await fs.readFileSync(filePath, 'utf8');
-    jsonObject = JSON.parse(data);
+    
+    try {
+        jsonObject = JSON.parse(data);   
+    } catch (error) {
+        return false;
+    }
 
-    return jsonObject;
+    
+    return utils.validateJsonAgainstSchema(jsonObject, deckSchema) ? jsonObject : false;
 })
 
 //TODO add actual prefs file and handling
