@@ -1,9 +1,9 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
-const utils = require('./utils.js');
+const utils = require('./utils/utils.js');
 const fs = require('fs');
 const path = require('path');
 
-const deckSchema = JSON.parse(fs.readFileSync(__dirname + '/deck_schema.json','utf8'));
+const deckSchema = JSON.parse(fs.readFileSync(__dirname + '/utils/deck_schema.json','utf8'));
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -13,7 +13,7 @@ const createWindow = () => {
       minHeight: 360,
       autoHideMenuBar: true,
       webPreferences: {
-        preload: path.join(app.getAppPath(), 'preload.js')
+        preload: path.join(app.getAppPath(), 'utils/preload.js')
       }
     })
   
