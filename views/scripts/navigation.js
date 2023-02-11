@@ -42,6 +42,7 @@ ForceSwap = function(newPage)
 
 FinalizeSwap = function(newPage)
 {
+    document.activeElement.blur();
     newPage.classList.remove("hidden"); /* Swap classes on the new page, triggering a CSS transition */
     newPage.classList.add("active");
     newPage.addEventListener("transitionend", function handler() { /* Once again, adding an event listener and cancelling it to prevent redundant calls */

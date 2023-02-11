@@ -1,4 +1,5 @@
-var activeDeck, activeDeckIndex;
+const StudyModes = { Meanings: 0, Readings: 1 }
+var activeDeck, activeDeckIndex, activeStudyMode;
 var activeUserInput = { expected: [], actual: []}
 
 /*
@@ -11,6 +12,9 @@ window.StudyPreload = async function()
         await window.tenori.listDecks(prefs.app.deckFolder).then(result => {
             StudyPopulatePicker(result);
         })
+    })
+}
+
     })
 }
 
@@ -29,6 +33,7 @@ window.StudyConfigPreload = async function()
         /* Set the active deck variables to their defaults to prevent unexpected behavior. */
         activeDeck = deck;
         activeDeckIndex = 0;
+        activeStudyMode = StudyModes.Meanings;
         activeUserInput = { expected: [], actual: []};
 
         await StudyInitDeck().then(async status => {
@@ -67,6 +72,43 @@ window.StudyInitDeck = async function()
     }
 
     return true;
+}
+
+/*
+Populates the quiz flow at the given element.
+*/
+StudyPopulateQuiz = async function(element)
+{
+    if(!activeDeck || activeDeck.deck.length -1 < element || !activeDeck.deck[element].apiData || activeDeck.deck[element].apiData.error)
+        return false;
+    
+    var current = activeDeck.deck[element];
+    var reading = ((current.kunYomi) ? current.apiData.kun_readings : current.apiData.on_readings)[current.reading]
+    var meaning = current.apiData.meanings[current.meaning];
+
+    document.getElementById("study-char").innerHTML = current.char;
+    document.getElementById("study-definition").innerHTML = meaning;
+    document.getElementById("study-reading").innerHTML = reading;
+    
+    var input = document.getElementById("study-input");
+    input.value = "";
+    input.placeholder = activeStudyMode == (StudyModes.Readings) ? "Romaji or Kana" : "English Meaning"
+
+    activeUserInput.expected.push(
+        activeStudyMode == (StudyModes.Readings) ? reading : meaning
+    )
+
+    return true;
+}
+
+/*
+Ends quiz mode on the currently active deck.
+TODO add support for additional post-study flow.
+*/
+StudyEndQuiz = async function()
+{
+    console.log(activeUserInput);
+    SwapPage("page-study");
 }
 
 /*
@@ -172,6 +214,30 @@ StudyPopulateConfigurator = async function()
     }
 
     return true;
+}
+
+/*
+Submit configurator and update active deck based on selected options.
+Also, begin quiz flow.
+*/
+StudySubmitConfigurator = function()
+{
+    var forms = document.getElementById("study-configurator-panels").querySelectorAll("form");
+    for(var i = 0; i < forms.length; i++)
+    {
+        var form = forms[i];
+
+        var meaning = form.querySelector("#meaning").value;
+
+        /* Get Preferred Reading */
+        var reading = Array.from(form.querySelector("#reading").options).filter(o => o.selected)[0];
+
+        activeDeck.deck[i].meaning = meaning;
+        activeDeck.deck[i].kunYomi = reading.dataset.kunyomi === "true" ? true : false;
+        activeDeck.deck[i].reading = reading.value;
+    }
+
+    SwapPage("page-study-quiz"); 
 }
 
 StudySelectDeck = function (directory)
