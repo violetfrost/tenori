@@ -15,6 +15,31 @@ window.StudyPreload = async function()
     })
 }
 
+/*
+Study quiz preload, called when the study quiz flow is first loaded.
+*/
+window.StudyQuizPreload = async function()
+{
+    document.getElementById("study-input")
+        .addEventListener("keyup", function handler(event)
+        {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                var textEntered = this.value;
+                activeUserInput.actual.push(textEntered);
+                activeDeckIndex++;
+                StudyPopulateQuiz(activeDeckIndex).then(result => {
+                    if(!result)
+                        {
+                            this.removeEventListener("keyup", handler);
+                            StudyEndQuiz();
+                        }
+                })                
+            }
+        }
+    );
+    await StudyPopulateQuiz(activeDeckIndex).then(result => {
+        console.log("Populating quiz");
     })
 }
 
