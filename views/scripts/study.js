@@ -166,6 +166,10 @@ StudyPopulateConfigurator = async function()
     if(!activeDeck || !activeDeck.deck)
         return false;
     
+    document.getElementById("study-configurator-name").innerText = activeDeck.properties.name;
+    document.getElementById("study-configurator-author").innerText = `by ${activeDeck.properties.author}`;
+    document.getElementById("study-configurator-description").innerText = activeDeck.properties.description;
+    
     var container = document.getElementById("study-configurator-panels");
     container.innerHTML = "";
     
@@ -191,10 +195,12 @@ StudyPopulateConfigurator = async function()
             
         var meaningLabel = document.createElement("label");
         var readingLabel = document.createElement("label");
+        var mnemonicLabel = document.createElement("label");
             
         var meaningSelect = document.createElement("select");
         var readingSelect = document.createElement("select");
-            
+        var mnemonicTextarea = document.createElement("textarea");
+
         /* Meaning Input */
         meaningLabel.innerHTML = "Meaning"
         meaningSelect.setAttribute("id", "meaning");
@@ -202,6 +208,8 @@ StudyPopulateConfigurator = async function()
         {
             var option = document.createElement("option");
             option.setAttribute("value", j);
+            if(j == element.reading)
+                option.setAttribute("selected", "selected");
             option.innerHTML = element.apiData.meanings[j];
             meaningSelect.appendChild(option);
         }
@@ -214,6 +222,8 @@ StudyPopulateConfigurator = async function()
             var option = document.createElement("option");
             option.setAttribute("value", j);
             option.setAttribute("data-kunyomi", true)
+            if(element.kunYomi && j == element.reading)
+                option.setAttribute("selected", "selected");
             option.innerHTML = element.apiData.kun_readings[j];
             readingSelect.appendChild(option);
         }
@@ -223,16 +233,25 @@ StudyPopulateConfigurator = async function()
             var option = document.createElement("option");
             option.setAttribute("value", j);
             option.setAttribute("data-kunyomi", false)
+            if(!element.kunYomi && j == element.reading)
+                option.setAttribute("selected", "selected");
             option.innerHTML = element.apiData.on_readings[j];
             readingSelect.appendChild(option);
         }
-            
+        
+        /* Mnemonic Input */
+        mnemonicLabel.innerHTML = "Mnemonic"
+        mnemonicTextarea.setAttribute("id", "mnemonic");
+        mnemonicTextarea.value = element.mnemonic;
+
         form.appendChild(header);
         form.appendChild(divider);
         form.appendChild(meaningLabel);
         form.appendChild(meaningSelect);
         form.appendChild(readingLabel);
         form.appendChild(readingSelect);
+        form.appendChild(mnemonicLabel);
+        form.appendChild(mnemonicTextarea);
         container.appendChild(form);
             
         index++;
@@ -253,6 +272,7 @@ StudySubmitConfigurator = function()
         var form = forms[i];
 
         var meaning = form.querySelector("#meaning").value;
+        var mnemonic = form.querySelector("#mnemonic").value;
 
         /* Get Preferred Reading */
         var reading = Array.from(form.querySelector("#reading").options).filter(o => o.selected)[0];
@@ -260,7 +280,10 @@ StudySubmitConfigurator = function()
         activeDeck.deck[i].meaning = meaning;
         activeDeck.deck[i].kunYomi = reading.dataset.kunyomi === "true" ? true : false;
         activeDeck.deck[i].reading = reading.value;
+        activeDeck.deck[i].mnemonic = mnemonic; 
     }
+
+    console.log(activeDeck);
 
     SwapPage("page-study-quiz"); 
 }

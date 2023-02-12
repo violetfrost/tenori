@@ -63,6 +63,10 @@ p,a,label {
 
 /* Redesign 1 */
 
+.rd-deck-subtitle {
+    margin-top: -25px;
+}
+
 .rd-layout-nav {
     width: 90px;
     position: absolute;
@@ -174,6 +178,16 @@ p,a,label {
 .rd-grid-container>.rd-panel {
     padding: 15px;
     display: inline-block;
+}
+
+.rd-grid-container>.rd-panel>textarea {
+    width: 100%;
+    resize: none;
+    height: 55px;
+}
+
+.rd-grid-container>.rd-panel>select {
+    width: 100%;
 }
 
 .rd-study-config-kanji {

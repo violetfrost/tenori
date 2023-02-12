@@ -51,11 +51,13 @@
                         <input class="rd-input rd-study-mnemonics" placeholder="Meaning"></input>
                     </div>
                     <div class="rd-content centered hidden" id="page-study-config" data-preload="StudyConfigPreload">
-                        <h1>Study</h1>
+                        <div class="rd-align-left">
+                            <h1 class="rd-deck-title" id="study-configurator-name"></h1>
+                            <p  class="rd-deck-subtitle" id="study-configurator-author"></p>
+                        </div>
                         <div class="content-divider"></div>
                         <div class="rd-align-left">
-                            <p>Displayed below are the kanji you will be learning in this session. Before continuing, take some time to create engaging mnemonics, if they aren't provided by this deck. Additionally, select which meanings and readings you'd like to learn.</p>
-                            <p>When you're ready, click the start button below to begin!</p>
+                            <p id="study-configurator-description"></p>
                         </div>
                         <div class="rd-grid-container" id="study-configurator-panels">
                             <!--Kanji grid-->
