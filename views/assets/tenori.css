@@ -178,6 +178,7 @@ p,a,label {
 .rd-grid-container>.rd-panel {
     padding: 15px;
     display: inline-block;
+    overflow: hidden;
 }
 
 .rd-grid-container>.rd-panel>textarea {
@@ -198,9 +199,14 @@ p,a,label {
     margin-bottom: 5px;
 }
 
+.hidden {
+    display: none;
+}
+
 .rd-content.hidden {
     opacity: 0;
     visibility: hidden;
+    display: initial;
 }
 
 .rd-content.active {
@@ -223,7 +229,9 @@ p,a,label {
     color: #000000;
     border: none;
     font-family: "DM Sans";
-    width: 100px;
+    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
     height: 30px;
     margin: 5px;
 }

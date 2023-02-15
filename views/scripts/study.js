@@ -1,12 +1,17 @@
-const StudyModes = { Meanings: 0, Readings: 1 }
-var activeDeck, activeDeckIndex, activeStudyMode;
-var activeUserInput = { expected: [], actual: []}
+const StudyModes = { Meaning: 0, Reading: 1 }
+const PaginationModes = { Quiz: 0, Learn: 1}
+var SessionData = {
+    activeDeck: undefined,
+    activeDeckIndex: 0,
+    activeStudyMode: StudyModes.Meaning,
+    activePaginationMode: PaginationModes.Learn
+}
 
 /*
 Study Preload, called when the study page is first loaded.
 Checks the user-specificed decks folder for tenori files, and then orders the deck picker populated.
 */
-window.StudyPreload = async function()
+StudyPreload = async function()
 {
     await window.tenori.getPrefs().then(async prefs => {
         await window.tenori.listDecks(prefs.app.deckFolder).then(result => {
@@ -16,71 +21,14 @@ window.StudyPreload = async function()
 }
 
 /*
-Study quiz preload, called when the study quiz flow is first loaded.
-*/
-window.StudyQuizPreload = async function()
-{
-    document.getElementById("study-input")
-        .addEventListener("keyup", function handler(event)
-        {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                var textEntered = this.value;
-                activeUserInput.actual.push(textEntered);
-                activeDeckIndex++;
-                StudyPopulateQuiz(activeDeckIndex).then(result => {
-                    if(!result)
-                        {
-                            this.removeEventListener("keyup", handler);
-                            StudyEndQuiz();
-                        }
-                })                
-            }
-        }
-    );
-    await StudyPopulateQuiz(activeDeckIndex).then(result => {
-        console.log("Populating quiz");
-    })
-}
-
-/*
-Study Config Preload, called when a deck is selected and needs to be configured.
-*/
-window.StudyConfigPreload = async function()
-{
-    if(!activeDeck.directory)
-        return alert("Error.");
-
-    await window.tenori.loadDeck(activeDeck.directory).then(async deck => {
-        if(!deck)
-            return alert("Error loading deck.");
-        
-        /* Set the active deck variables to their defaults to prevent unexpected behavior. */
-        activeDeck = deck;
-        activeDeckIndex = 0;
-        activeStudyMode = StudyModes.Meanings;
-        activeUserInput = { expected: [], actual: []};
-
-        await StudyInitDeck().then(async status => {
-            if(!status)
-                return alert("Error initializing deck.")
-            
-            /* We're finally ready to populate the configurator. */
-            var x = await StudyPopulateConfigurator();
-            console.log(x);
-        })
-    })
-}
-
-/*
 Initialize the active deck for studying by getting data from kanjiapi.
 */
-window.StudyInitDeck = async function()
+StudyInitDeck = async function()
 {
-    if(!activeDeck || !activeDeck.deck)
+    if(!SessionData.activeDeck || !SessionData.activeDeck.deck)
         return false;
     
-    for await (const element of activeDeck.deck)
+    for await (const element of SessionData.activeDeck.deck)
     {
         await ResolveKanjiData(element.char).then(result => {            
             if(!element)
@@ -93,6 +41,11 @@ window.StudyInitDeck = async function()
                 meanings: result.meanings,
                 jlpt: result.jlpt
             }
+
+            element.userInput = {
+                expected: undefined,
+                actual: undefined
+            }
         });
     }
 
@@ -100,197 +53,12 @@ window.StudyInitDeck = async function()
 }
 
 /*
-Populates the quiz flow at the given element.
+Force re-initialization of study page.
 */
-StudyPopulateQuiz = async function(element)
+StudyForceReset = function()
 {
-    if(!activeDeck || activeDeck.deck.length -1 < element || !activeDeck.deck[element].apiData || activeDeck.deck[element].apiData.error)
-        return false;
-    
-    var current = activeDeck.deck[element];
-    var reading = ((current.kunYomi) ? current.apiData.kun_readings : current.apiData.on_readings)[current.reading]
-    var meaning = current.apiData.meanings[current.meaning];
+    SessionData.activeDeck = undefined;
+    SessionData.activeDeckIndex = undefined;
 
-    document.getElementById("study-char").innerHTML = current.char;
-    document.getElementById("study-definition").innerHTML = meaning;
-    document.getElementById("study-reading").innerHTML = reading;
-    
-    var input = document.getElementById("study-input");
-    input.value = "";
-    input.placeholder = activeStudyMode == (StudyModes.Readings) ? "Romaji or Kana" : "English Meaning"
-
-    activeUserInput.expected.push(
-        activeStudyMode == (StudyModes.Readings) ? reading : meaning
-    )
-
-    return true;
-}
-
-/*
-Ends quiz mode on the currently active deck.
-TODO add support for additional post-study flow.
-*/
-StudyEndQuiz = async function()
-{
-    console.log(activeUserInput);
     SwapPage("page-study");
-}
-
-/*
-Populates the deck picker based on a list of directories.
-Each directory should be that of a Tenori file.
-    Arguments:
-        directories: an array of directories.
-*/
-StudyPopulatePicker = async function(directories)
-{
-    var container = document.getElementById("study-picker-container");
-    container.innerHTML = "";
-    for(var i = 0; i < directories.length; i++)
-    {
-        var hyperlink = document.createElement("a");
-        hyperlink.setAttribute("href", "#");
-        hyperlink.setAttribute("onclick", `StudySelectDeck(this.innerHTML)`);
-        hyperlink.innerText = directories[i];
-        container.appendChild(hyperlink);
-        container.appendChild(document.createElement("div"));
-    }
-}
-
-/*
-Populate the configurator screen based on the active deck.
-TODO: Clean this up, make it more efficient.
-*/
-StudyPopulateConfigurator = async function()
-{
-    if(!activeDeck || !activeDeck.deck)
-        return false;
-    
-    document.getElementById("study-configurator-name").innerText = activeDeck.properties.name;
-    document.getElementById("study-configurator-author").innerText = `by ${activeDeck.properties.author}`;
-    document.getElementById("study-configurator-description").innerText = activeDeck.properties.description;
-    
-    var container = document.getElementById("study-configurator-panels");
-    container.innerHTML = "";
-    
-    var index = 0;
-    for await(const element of activeDeck.deck)
-    {
-        console.log(element.apiData);
-        if(!element.apiData || element.apiData.error == true)
-            return;
-        
-        var form = document.createElement("form");
-        form.setAttribute("data-id", index);
-        form.classList.add("rd-panel");
-            
-        /* Kanji Header */
-        var header = document.createElement("h1");
-        header.innerText = element.char;
-        header.classList.add("rd-study-config-kanji");
-        var divider = document.createElement("div");
-        divider.classList.add("content-divider");
-            
-        /* Input & Label definitions */
-            
-        var meaningLabel = document.createElement("label");
-        var readingLabel = document.createElement("label");
-        var mnemonicLabel = document.createElement("label");
-            
-        var meaningSelect = document.createElement("select");
-        var readingSelect = document.createElement("select");
-        var mnemonicTextarea = document.createElement("textarea");
-
-        /* Meaning Input */
-        meaningLabel.innerHTML = "Meaning"
-        meaningSelect.setAttribute("id", "meaning");
-        for(var j = 0; j < element.apiData.meanings.length; j++)
-        {
-            var option = document.createElement("option");
-            option.setAttribute("value", j);
-            if(j == element.reading)
-                option.setAttribute("selected", "selected");
-            option.innerHTML = element.apiData.meanings[j];
-            meaningSelect.appendChild(option);
-        }
-            
-        /* Reading Input */
-        readingLabel.innerHTML = "Reading"
-        readingSelect.setAttribute("id", "reading");
-        for(var j = 0; j < element.apiData.kun_readings.length; j++)
-        {
-            var option = document.createElement("option");
-            option.setAttribute("value", j);
-            option.setAttribute("data-kunyomi", true)
-            if(element.kunYomi && j == element.reading)
-                option.setAttribute("selected", "selected");
-            option.innerHTML = element.apiData.kun_readings[j];
-            readingSelect.appendChild(option);
-        }
-        readingSelect.appendChild(document.createElement("option"))
-        for(var j = 0; j < element.apiData.on_readings.length; j++)
-        {
-            var option = document.createElement("option");
-            option.setAttribute("value", j);
-            option.setAttribute("data-kunyomi", false)
-            if(!element.kunYomi && j == element.reading)
-                option.setAttribute("selected", "selected");
-            option.innerHTML = element.apiData.on_readings[j];
-            readingSelect.appendChild(option);
-        }
-        
-        /* Mnemonic Input */
-        mnemonicLabel.innerHTML = "Mnemonic"
-        mnemonicTextarea.setAttribute("id", "mnemonic");
-        mnemonicTextarea.value = element.mnemonic;
-
-        form.appendChild(header);
-        form.appendChild(divider);
-        form.appendChild(meaningLabel);
-        form.appendChild(meaningSelect);
-        form.appendChild(readingLabel);
-        form.appendChild(readingSelect);
-        form.appendChild(mnemonicLabel);
-        form.appendChild(mnemonicTextarea);
-        container.appendChild(form);
-            
-        index++;
-    }
-
-    return true;
-}
-
-/*
-Submit configurator and update active deck based on selected options.
-Also, begin quiz flow.
-*/
-StudySubmitConfigurator = function()
-{
-    var forms = document.getElementById("study-configurator-panels").querySelectorAll("form");
-    for(var i = 0; i < forms.length; i++)
-    {
-        var form = forms[i];
-
-        var meaning = form.querySelector("#meaning").value;
-        var mnemonic = form.querySelector("#mnemonic").value;
-
-        /* Get Preferred Reading */
-        var reading = Array.from(form.querySelector("#reading").options).filter(o => o.selected)[0];
-
-        activeDeck.deck[i].meaning = meaning;
-        activeDeck.deck[i].kunYomi = reading.dataset.kunyomi === "true" ? true : false;
-        activeDeck.deck[i].reading = reading.value;
-        activeDeck.deck[i].mnemonic = mnemonic; 
-    }
-
-    console.log(activeDeck);
-
-    SwapPage("page-study-quiz"); 
-}
-
-StudySelectDeck = function (directory)
-{
-    activeDeck = {};
-    activeDeck.directory = directory;
-    SwapPage("page-study-config"); 
 }
