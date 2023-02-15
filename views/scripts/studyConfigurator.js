@@ -76,7 +76,7 @@ StudyPopulateConfigurator = async function()
         {
             var option = document.createElement("option");
             option.setAttribute("value", j);
-            if(j == element.reading)
+            if(j == element.meaning)
                 option.setAttribute("selected", "selected");
             option.innerHTML = element.apiData.meanings[j];
             meaningSelect.appendChild(option);

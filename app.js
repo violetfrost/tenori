@@ -38,7 +38,17 @@ ipcMain.handle('tenori-create-sorted-deck', (event, args) => {
         
         console.log(`File path: ${result.filePath}, Text: ${args.text}` )
 
-        fs.writeFile(result.filePath, JSON.stringify(utils.createSortedKanjiList(utils.getKanjiFromString(args.text))), err => {
+        fs.writeFile(result.filePath, JSON.stringify(
+            {
+                properties: {
+                    version: 100,
+                    name: "Placeholder",
+                    description: "Placeholder Description.",
+                    author: "Jane Smith"
+                },
+                deck: utils.createSortedKanjiList(utils.getKanjiFromString(args.text))
+            }
+        ), err => {
             if(err)
                 console.error(err);
         })
