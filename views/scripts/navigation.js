@@ -4,6 +4,7 @@ window.SettingsPreload = async function()
 }
 
 var currentPage = document.getElementById("page-study");
+var currentButton = currentPage.dataset.button;
 var canSwapPages = false;
 window.StudyPreload().then(() => {
     currentPage.classList.remove("hidden");
@@ -26,6 +27,14 @@ SwapPage = function(toSwap) /* Handles the swapping of pages on the main window,
 ForceSwap = function(newPage)
 {
     canSwapPages = false; /* Mark swap operation as in progress */
+    
+            
+    if(newPage.dataset.button)
+    {
+        document.getElementById(currentButton).classList.remove("active");
+        document.getElementById(newPage.dataset.button).classList.add("active");
+        currentButton = newPage.dataset.button;
+    }
     
     currentPage.classList.remove("active"); /* Swap classes on the active page, triggering a CSS transition */
     currentPage.classList.add("hidden");

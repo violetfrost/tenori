@@ -11,18 +11,52 @@ const createWindow = () => {
       height: 720,
       minWidth: 640,
       minHeight: 360,
+      titleBarStyle: 'hidden',
+      frame: false,
       autoHideMenuBar: true,
       webPreferences: {
         preload: path.join(app.getAppPath(), 'utils/preload.js')
       }
     })
-  
+
+    win.on('unmaximize', () => {win.webContents.send('tenori-titlebar-on', {maximized: false})});
+    win.on('maximize', () => {win.webContents.send('tenori-titlebar-on', {maximized: true})});
+
     win.loadFile('views/index.html')
 }
 
 app.whenReady().then(() => {
-    createWindow()
-  })
+    createWindow();
+})
+
+ipcMain.handle('tenori-titlebar-event', (event, args) => {
+    event.preventDefault();
+
+    if(args.type == undefined)
+        return false;
+    
+    var win = BrowserWindow.getFocusedWindow();
+    if(args.type == 0 && !win.isMinimized()) //Minimize
+    {
+        win.minimize();
+        return true;
+    }
+    else if(args.type == 1 && !win.isMaximized()) //Maximize
+    {
+        win.maximize();
+        return true;
+    }
+    else if(args.type == 2 && win.isMaximized()) //Restore
+    {
+        win.unmaximize();
+        return true;
+    }        
+    else if(args.type == 3 && win.closable) //Close
+    {
+        win.close();
+        return true;
+    } else {return false;}
+})
 
 ipcMain.handle('tenori-create-sorted-deck', (event, args) => {
     event.preventDefault();

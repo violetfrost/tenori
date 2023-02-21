@@ -17,6 +17,7 @@
     "electron": "^22.0.0"
   },
   "dependencies": {
+    "electron-packager": "^17.1.1",
     "jsonschema": "^1.4.1"
   }
 }

@@ -5,34 +5,59 @@
         <meta charset="UTF-8">
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src data: https://kanjiapi.dev 'self'; script-src 'unsafe-inline' 'self'; style-src 'unsafe-inline' 'self'">
         <link rel="stylesheet" href="assets/tenori.css">
+        <link rel="stylesheet" href="assets/titlebar.css">
     </head>
     <body>
+        <header>
+            <div id="window-title">
+                <span>Tenori</span>
+              </div>
+            <div id="drag-region">
+                <div id="window-controls">
+                    <div class="titlebar-button" id="min-button">
+                      <img class="icon" srcset="assets/titlebar_icons/min-w-10.png 1x, assets/titlebar_icons/min-w-12.png 1.25x, assets/titlebar_icons/min-w-15.png 1.5x, assets/titlebar_icons/min-w-15.png 1.75x, assets/titlebar_icons/min-w-20.png 2x, assets/titlebar_icons/min-w-20.png 2.25x, assets/titlebar_icons/min-w-24.png 2.5x, assets/titlebar_icons/min-w-30.png 3x, assets/titlebar_icons/min-w-30.png 3.5x" draggable="false" />
+                    </div>
+                    <div class="titlebar-button" id="max-button">
+                      <img class="icon" srcset="assets/titlebar_icons/max-w-10.png 1x, assets/titlebar_icons/max-w-12.png 1.25x, assets/titlebar_icons/max-w-15.png 1.5x, assets/titlebar_icons/max-w-15.png 1.75x, assets/titlebar_icons/max-w-20.png 2x, assets/titlebar_icons/max-w-20.png 2.25x, assets/titlebar_icons/max-w-24.png 2.5x, assets/titlebar_icons/max-w-30.png 3x, assets/titlebar_icons/max-w-30.png 3.5x" draggable="false" />
+                    </div>
+                    <div class="titlebar-button hidden" id="restore-button">
+                      <img class="icon" srcset="assets/titlebar_icons/restore-w-10.png 1x, assets/titlebar_icons/restore-w-12.png 1.25x, assets/titlebar_icons/restore-w-15.png 1.5x, assets/titlebar_icons/restore-w-15.png 1.75x, assets/titlebar_icons/restore-w-20.png 2x, assets/titlebar_icons/restore-w-20.png 2.25x, assets/titlebar_icons/restore-w-24.png 2.5x, assets/titlebar_icons/restore-w-30.png 3x, assets/titlebar_icons/restore-w-30.png 3.5x" draggable="false" />
+                    </div>
+                    <div class="titlebar-button" id="close-button">
+                      <img class="icon" srcset="assets/titlebar_icons/close-w-10.png 1x, assets/titlebar_icons/close-w-12.png 1.25x, assets/titlebar_icons/close-w-15.png 1.5x, assets/titlebar_icons/close-w-15.png 1.75x, assets/titlebar_icons/close-w-20.png 2x, assets/titlebar_icons/close-w-20.png 2.25x, assets/titlebar_icons/close-w-24.png 2.5x, assets/titlebar_icons/close-w-30.png 3x, assets/titlebar_icons/close-w-30.png 3.5x" draggable="false" />
+                    </div>
+                  </div>
+            </div>
+        </header>
         <main>
             <div class="rd-layout-nav">
                 <div class="rd-panel rd-panel-nav">
 <!--Sidebar-->      <div class="rd-nav-buttons">
-                        <button type="button" id="btn-home" onclick="SwapPage('page-home');">Home</button>
-                        <button type="button" id="btn-study" onclick="SwapPage('page-study');">Study</button>
-                        <button type="button" id="btn-deck-manager" onclick="SwapPage('page-deck-manager');">Deck Mgr</button>
-                        <button type="button" id="btn-app-settings" onclick="SwapPage('page-settings');">Settings</button>
+                        <button type="button" class="nav-button" id="btn-home" onclick="SwapPage('page-home');"></button>
+                        <button type="button" class="nav-button active" id="btn-study" onclick="SwapPage('page-study');"></button>
+                        <button type="button" class="nav-button" id="btn-deck-manager" onclick="SwapPage('page-deck-manager');"></button>
+                        <button type="button" class="nav-button" id="btn-app-settings" onclick="SwapPage('page-settings');"></button>
                     </div>
                 </div>
             </div>
             <div class="rd-layout-main">
                 <div class="rd-panel">
-<!--Deck Picker-->  <div class="rd-content hidden" id="page-study" data-preload="StudyPreload">
+<!--Deck Picker-->  <div class="rd-content centered hidden" id="page-study" data-preload="StudyPreload" data-button="btn-study">
                         <h1>Study</h1>
+                        <p>Expand your horizons.</p>
                         <div class="content-divider"></div>
-                        <p>Here is a list of currently available decks. If you don't see a deck, ensure it is inside your decks folder.</p>
-                        <div id="study-picker-container">
-
+                        <div class="rd-align-left">
+                            <p>Here is a list of currently available decks. If you don't see a deck, ensure it is inside your decks folder.</p>
+                            <div class="rd-content-text" id="study-picker-container">
+    
+                            </div>  
                         </div>
                     </div>
 <!--Pagination-->   <div class="rd-content centered-vh hidden" id="page-study-pagination" data-preload="StudyPaginationPreload">
                         <h3 id="study-char" class="study-character">Kanji</h3>
                         <h3 id="study-sub1" class="study-sub">Kanji Meaning</h3>
                         <h3 id="study-sub2" class="study-sub">Kanji Reading</h3>
-                        <button id="study-pagination-retreat" class="rd-button hidden">Previous</button>'
+                        <button id="study-pagination-retreat" class="rd-button hidden">Previous</button>
                         <input id="study-pagination-advance" class="rd-input rd-study-mnemonics" placeholder="Meaning"></input>
                     </div>
 <!--Recap-->        <div class="rd-content centered hidden" id="page-study-recap" data-preload="StudyRecapPreload">
@@ -41,7 +66,8 @@
                         <div class="rd-align-left">
                             <p id="study-recap-text"></p>
                             <button onclick="StudyReturn()" class="rd-button" id="study-recap-button1"></button>
-                            <button onclick="StudyContinue()" class="rd-button" id="study-recap-button2"></button>    
+                            <button onclick="StudyContinue()" class="rd-button" id="study-recap-button2"></button>
+                            <button onclick="StudySwitchModes()" class="rd-button" id="study-recap-button3"></button>    
                         </div>
                     </div>
 <!--Configurator--> <div class="rd-content centered hidden" id="page-study-config" data-preload="StudyConfigPreload">
@@ -61,24 +87,44 @@
                             <button class="rd-button" onclick="StudySubmitConfigurator()">Let's go!</button>
                         </div>
                     </div>
-<!--Deck Mgr-->     <div class="rd-content hidden" id="page-deck-manager" data-preload="DeckManagerPreload">
+<!--Deck Mgr-->     <div class="rd-content centered hidden" id="page-deck-manager" data-preload="DeckManagerPreload" data-button="btn-deck-manager">
                         <h1>Deck Manager</h1>
                         <p>Create, import, and export study decks here.</p>
                         <div class="content-divider"></div>
-                        <h3>Create a Deck</h3>
-                        <p>Create a deck from any Japanese text, ordered from most to least common kanji.</p>
-                        <textarea class="textbox-manager" id="mgr-jp-text" placeholder="Paste any Japanese text here..."></textarea>
-                        <button onclick="ManagerCreateDeckFromBox()">Create Deck</button>
+                        <div class="rd-align-left">
+                            <h3>Create a Deck</h3>
+                            <p>Create a deck from any Japanese text, ordered from most to least common kanji.</p>
+                            <textarea class="textbox-manager" id="mgr-jp-text" placeholder="Paste any Japanese text here..."></textarea>
+                            <button class="rd-button" onclick="ManagerCreateDeckFromBox()">Create Deck</button>    
+                        </div>
                     </div>
-<!--Settings-->     <div class="rd-content hidden" id="page-settings" data-preload="SettingsPreload">
-                        <h1>Settings Page</h1>
+<!--Settings-->     <div class="rd-content centered hidden" id="page-settings" data-preload="SettingsPreload" data-button="btn-app-settings">
+                        <h1>Settings</h1>
+                        <p>View and update all of Tenori's settings here.</p>
+                        <div class="content-divider"></div>
+                        <div class="rd-align-left">
+                            <p>This page is coming soon. Check back later!</p>
+                        </div>
                     </div>
-<!--Home-->         <div class="rd-content hidden" id="page-home">
-                        <h1>Home Page</h1>
+<!--Home-->         <div class="rd-content centered hidden" id="page-home" data-button="btn-home">
+                        <h1>Welcome</h1>
+                        <p>Thank you for downloading Tenori!</p>
+                        <div class="content-divider"></div>
+                        <div class="rd-align-left">
+                            <p class="rd-content-text">
+                                Tenori is being created from the ground-up with Japanese learners in mind. By using established methods like active recall, spaced repetition, and mnemonics, it aims to make the process of learning new Kanji easier & more efficient. With Tenori, instead of battling with complicated configuration files and outdated UI, you will be able to focus entirely on your studies.
+                            </p>
+                            <ul class="rd-content-text">
+                                <li>👩‍💻 Keep up with development on <a href="https://github.com/violetfrost/tenori">GitHub</a>!</li>
+                                <li>🐜 Found a bug? Submit an <a href="https://github.com/violetfrost/tenori/issues">issue</a>.</li>
+                                <li>✅ Have an idea for a feature? <a href="https://github.com/violetfrost/tenori/pulls">Pull Requests</a> are welcome!</li>
+                            </ul>    
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
+        <script src="scripts/titlebar.js"></script>
         <script src="scripts/rendererUtils.js"></script>
         <script src="scripts/manager.js"></script>
         <script src="scripts/study.js"></script>

@@ -3,6 +3,7 @@ StudyRecapPreload = async function()
     var text = document.getElementById("study-recap-text");
     var btn1 = document.getElementById("study-recap-button1");
     var btn2 = document.getElementById("study-recap-button2");
+    var btn3 = document.getElementById("study-recap-button3");
 
     text.innerText =
     (SessionData.activePaginationMode == PaginationModes.Learn)
@@ -16,6 +17,10 @@ StudyRecapPreload = async function()
     btn2.innerText = SessionData.activePaginationMode == PaginationModes.Learn
     ? "Continue to Quiz"
     : "Repeat Quiz"
+    
+    btn3.innerText = SessionData.activeStudyMode == StudyModes.Meaning
+    ? "Switch to Readings"
+    : "Switch to Meanings";
 }
 
 StudyGetResultsString = async function()
@@ -37,5 +42,12 @@ StudyReturn = async function()
 StudyContinue = async function()
 {
     SessionData.activePaginationMode = PaginationModes.Quiz;
+    SwapPage("page-study-pagination");
+}
+
+StudySwitchModes = async function()
+{
+    SessionData.activeStudyMode =
+    (SessionData.activeStudyMode === StudyModes.Meaning) ? StudyModes.Reading : StudyModes.Meaning; 
     SwapPage("page-study-pagination");
 }
