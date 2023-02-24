@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "properties": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "deck": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "name",
+        "deck"
+      ]
+    },
+    "blocks": {
+      "type": "object",
+      "properties": {
+        "refBlockSize": {
+          "type": "integer"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "size": {
+                "type": "integer"
+              },
+              "studyMode": {
+                "type": "integer"
+              },
+              "paginationMode": {
+                "type": "integer"
+              },
+              "lastStudied": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "size",
+              "studyMode",
+              "paginationMode",
+              "lastStudied"
+            ]
+          }
+        }
+      },
+      "required": [
+        "refBlockSize",
+        "list"
+      ]
+    }
+  },
+  "required": [
+    "properties",
+    "blocks"
+  ]
+}
+

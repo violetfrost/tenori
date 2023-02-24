@@ -136,6 +136,35 @@ LAYOUT
     outline: 1px solid #3e3e3e;
     background-color: #282828E0;
 }
+.rd-sessions-container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 320px;
+}
+.rd-panel.rd-sessions {
+    padding: 10px;
+    height: 100px;
+    width: 100%;
+    outline: none;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 5px 0px 5px 0px;
+    transition: all .1s ease-in;
+    transition-property: background-color;
+}
+.rd-panel.rd-sessions.rd-sessions-create {
+    text-align: center;
+}
+.rd-sessions-plus {
+    background-color: #ffffff;
+    -webkit-mask: url("./sessions_create.svg") no-repeat center; 
+    mask: inherit;
+}
+.rd-panel.rd-sessions:hover {
+    background-color: #3e3e3e;
+    transition: all .1s ease-in;
+    transition-property: background-color;
+}
 .rd-grid-container>.rd-panel
 {
     padding: 15px;
