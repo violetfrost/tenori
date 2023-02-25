@@ -3,14 +3,21 @@ window.SettingsPreload = async function()
 
 }
 
-var currentPage = document.getElementById("page-study");
-var currentButton = currentPage.dataset.button;
+var currentPage = undefined;
+var currentButton = undefined;
 var canSwapPages = false;
-window.StudyPreload().then(() => {
-    currentPage.classList.remove("hidden");
-    currentPage.classList.add("active");
-    canSwapPages = true;
+
+document.addEventListener('tenori-dom-ready', () => {
+    currentPage = document.getElementById("page-study");
+    currentButton = currentPage.dataset.button;
+    canSwapPages = false;
+    window.StudyPreload().then(() => {
+        currentPage.classList.remove("hidden");
+        currentPage.classList.add("active");
+        canSwapPages = true;
+    });
 });
+
 
 SwapPage = function(toSwap) /* Handles the swapping of pages on the main window, toSwap is the page to make active*/
 {

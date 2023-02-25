@@ -42,101 +42,17 @@
             </div>
             <div class="rd-layout-main">
                 <div class="rd-panel">
-<!--Deck Picker-->  <div class="rd-content centered hidden" id="page-study" data-preload="StudyPreload" data-button="btn-study">
-                        <h1>Study</h1>
-                        <p>Expand your horizons.</p>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <p class="rd-content-text">Here's a list of currently active study sessions. To start a new session, click the plus icon.</p>
-                            <div class="rd-sessions-container">
-                                <div class="rd-sessions rd-panel">
-                                    <h1 class="rd-sessions-header">Example Deck 1</h1>
-                                    <p class="rd-sessions-info">Last used 2/22/2023 15:36 | Block 1 | 20 Kanji Remaining</p>
-                                </div>
-                                <div class="rd-sessions rd-panel">
-                                    <h1 class="rd-sessions-header">Example Deck 2</h1>
-                                    <p class="rd-sessions-info">Last used 2/15/2023 03:56 | Block 16 | All Kanji Learned</p>
-                                </div>
-                                <div class="rd-sessions rd-sessions-create rd-panel">
-                                    <div class="rd-sessions-plus"></div>
-                                </div>
-                            </div>
-                            <div class="rd-content-text" id="study-picker-container">
-    
-                            </div>  
-                        </div>
-                    </div>
-<!--Pagination-->   <div class="rd-content centered-vh hidden" id="page-study-pagination" data-preload="StudyPaginationPreload">
-                        <h3 id="study-char" class="study-character">Kanji</h3>
-                        <h3 id="study-sub1" class="study-sub">Kanji Meaning</h3>
-                        <h3 id="study-sub2" class="study-sub">Kanji Reading</h3>
-                        <button id="study-pagination-retreat" class="rd-button hidden">Previous</button>
-                        <input id="study-pagination-advance" class="rd-input rd-study-mnemonics" placeholder="Meaning"></input>
-                    </div>
-<!--Recap-->        <div class="rd-content centered hidden" id="page-study-recap" data-preload="StudyRecapPreload">
-                        <h1>Recap</h1>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <p id="study-recap-text"></p>
-                            <button onclick="StudyReturn()" class="rd-button" id="study-recap-button1"></button>
-                            <button onclick="StudyContinue()" class="rd-button" id="study-recap-button2"></button>
-                            <button onclick="StudySwitchModes()" class="rd-button" id="study-recap-button3"></button>    
-                        </div>
-                    </div>
-<!--Configurator--> <div class="rd-content centered hidden" id="page-study-config" data-preload="StudyConfigPreload">
-                        <div class="rd-align-left">
-                            <h1 class="rd-deck-title" id="study-configurator-name"></h1>
-                            <p  class="rd-deck-subtitle" id="study-configurator-author"></p>
-                        </div>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <p id="study-configurator-description"></p>
-                        </div>
-                        <div class="rd-grid-container" id="study-configurator-panels">
-                            <!--Kanji grid-->
-                        </div>
-                        <div class="rd-align-left" style="margin-top: 10px;">
-                            <button class="rd-button" onclick="StudyForceReset()">I changed my mind.</button>
-                            <button class="rd-button" onclick="StudySubmitConfigurator()">Let's go!</button>
-                        </div>
-                    </div>
-<!--Deck Mgr-->     <div class="rd-content centered hidden" id="page-deck-manager" data-preload="DeckManagerPreload" data-button="btn-deck-manager">
-                        <h1>Deck Manager</h1>
-                        <p>Create, import, and export study decks here.</p>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <h3>Create a Deck</h3>
-                            <p>Create a deck from any Japanese text, ordered from most to least common kanji.</p>
-                            <textarea class="textbox-manager" id="mgr-jp-text" placeholder="Paste any Japanese text here..."></textarea>
-                            <button class="rd-button" onclick="ManagerCreateDeckFromBox()">Create Deck</button>    
-                        </div>
-                    </div>
-<!--Settings-->     <div class="rd-content centered hidden" id="page-settings" data-preload="SettingsPreload" data-button="btn-app-settings">
-                        <h1>Settings</h1>
-                        <p>View and update all of Tenori's settings here.</p>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <p>This page is coming soon. Check back later!</p>
-                        </div>
-                    </div>
-<!--Home-->         <div class="rd-content centered hidden" id="page-home" data-button="btn-home">
-                        <h1>Welcome</h1>
-                        <p>Thank you for downloading Tenori!</p>
-                        <div class="content-divider"></div>
-                        <div class="rd-align-left">
-                            <p class="rd-content-text">
-                                Tenori is being created from the ground-up with Japanese learners in mind. By using established methods like active recall, spaced repetition, and mnemonics, it aims to make the process of learning new Kanji easier & more efficient. With Tenori, instead of battling with complicated configuration files and outdated UI, you will be able to focus entirely on your studies.
-                            </p>
-                            <ul class="rd-content-text">
-                                <li>👩‍💻 Keep up with development on <a href="https://github.com/violetfrost/tenori">GitHub</a>!</li>
-                                <li>🐜 Found a bug? Submit an <a href="https://github.com/violetfrost/tenori/issues">issue</a>.</li>
-                                <li>✅ Have an idea for a feature? <a href="https://github.com/violetfrost/tenori/pulls">Pull Requests</a> are welcome!</li>
-                            </ul>    
-                        </div>
-                    </div>
+<!--Sessions-->     <div data-include="templates/sessions.html"></div>
+<!--Pagination-->   <div data-include="templates/pagination.html"></div>
+<!--Recap-->        <div data-include="templates/recap.html"></div>
+<!--Configurator--> <div data-include="templates/configurator.html"></div>
+<!--Deck Mgr-->     <div data-include="templates/manager.html"></div>
+<!--Settings-->     <div data-include="templates/settings.html"></div>
+<!--Home-->         <div data-include="templates/home.html"></div>
                 </div>
             </div>
         </main>
+        <script src="scripts/csi.js"></script>
         <script src="scripts/titlebar.js"></script>
         <script src="scripts/rendererUtils.js"></script>
         <script src="scripts/manager.js"></script>
