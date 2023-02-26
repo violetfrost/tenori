@@ -1,9 +1,11 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { randomUUID } = require('crypto');
 const utils = require('./utils/utils.js');
 const fs = require('fs');
 const path = require('path');
 
 const deckSchema = JSON.parse(fs.readFileSync(__dirname + '/utils/deck_schema.json','utf8'));
+const sessionSchema = JSON.parse(fs.readFileSync(__dirname + '/utils/session_schema.json', 'utf8'));
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -133,7 +135,8 @@ ipcMain.handle('tenori-get-prefs', async (event, args) => {
     return {
         app: {
             theme: 'system',
-            deckFolder: app.getPath('userData') + "\\decks"
+            deckFolder: app.getPath('userData') + "\\decks",
+            sessionFolder: app.getPath('userData') + "\\sessions"
         },
         study: {
             alwaysDisplayReadings: false,
@@ -143,11 +146,82 @@ ipcMain.handle('tenori-get-prefs', async (event, args) => {
     }
 })
 
+ipcMain.handle('tenori-create-session', async (event, args) => {
+    //args.name, args.deck, args.directory
+
+    if(!args.name || args.name == "" || !args.deck || !args.directory)
+        return false;
+    
+        
+    if(await !fs.existsSync(args.directory))
+    {
+        await fs.mkdirSync(args.directory)
+    }
+
+    var fileName = `session-${randomUUID()}.tenorisession`;
+    var jsonData = 
+    {
+        properties: {
+            version: 100,
+            name: args.name,
+            deck: args.deck
+        }, blocks: {
+            refBlockSize: 5,
+            list: []
+        }
+    }
+
+    await fs.writeFileSync(path.join(args.directory, fileName), JSON.stringify(
+        jsonData
+    ), err => {
+        if(err)
+            console.error(err);
+    });
+
+    return jsonData;
+});
+
+ipcMain.handle('tenori-load-session', async(event, args) => {
+    if(args.directory === undefined)
+        return;
+    
+    var jsonObject = {};
+
+    try {
+        var fileData = await fs.readFileSync(args.directory, "utf-8");   
+        jsonObject = JSON.parse(fileData);
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+
+    return utils.validateJsonAgainstSchema(jsonObject, sessionSchema) ? jsonObject : false;
+});
+
+ipcMain.handle('tenori-list-sessions', async(event, args) => {
+    if(args.directory === undefined)
+        return;
+    
+    var finalFiles = [];
+
+    if(await !fs.existsSync(args.directory))
+    {
+        await fs.mkdirSync(args.directory)
+    }
+
+    var files = await fs.readdirSync(args.directory);
+    var names = files.filter(el => path.extname(el) === '.tenorisession')
+    for(var i = 0; i < names.length; i++)
+    {
+        finalFiles.push(path.join(args.directory, names[i]))
+    }
+
+    return finalFiles;
+})
 ipcMain.handle('tenori-list-decks', async (event, args) => {
     if(args.directory === undefined)
         return false;
     
-    console.log(args.directory);
     var finalFiles = [];
 
     if(await !fs.existsSync(args.directory))
@@ -159,7 +233,6 @@ ipcMain.handle('tenori-list-decks', async (event, args) => {
     var names = files.filter(el => path.extname(el) === '.tenori')
     for(var i = 0; i < names.length; i++)
     {
-        console.log(names[i]);
         finalFiles.push(path.join(args.directory, names[i]))
     }
 

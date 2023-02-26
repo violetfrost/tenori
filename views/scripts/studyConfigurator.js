@@ -3,10 +3,10 @@ Study Config Preload, called when a deck is selected and needs to be configured.
 */
 StudyConfigPreload = async function()
 {
-    if(!SessionData.activeDeck.directory)
+    if(!SessionData.properties.deck)
         return alert("Error.");
 
-    await window.tenori.loadDeck(SessionData.activeDeck.directory).then(async deck => {
+    await window.tenori.loadDeck(SessionData.properties.deck).then(async deck => {
         if(!deck)
             return alert("Error loading deck.");
         

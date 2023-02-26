@@ -138,8 +138,6 @@ LAYOUT
 }
 .rd-sessions-container {
     overflow-x: hidden;
-    overflow-y: auto;
-    height: 320px;
 }
 .rd-panel.rd-sessions {
     padding: 10px;
@@ -152,6 +150,9 @@ LAYOUT
     transition: all .1s ease-in;
     transition-property: background-color;
 }
+input[type="radio"].rd-sessions-input {
+    display: none;
+  }
 .rd-panel.rd-sessions.rd-sessions-create {
     text-align: center;
 }
@@ -165,6 +166,13 @@ LAYOUT
     transition: all .1s ease-in;
     transition-property: background-color;
 }
+  
+input[type="radio"].rd-sessions-input:checked + label {
+    background-color: #3e3e3e;
+    transition: all .1s ease-in;
+    transition-property: background-color;
+}
+  
 .rd-grid-container>.rd-panel
 {
     padding: 15px;
@@ -326,13 +334,22 @@ AND INPUTS
 }
 
 .rd-input {
-    background-color: transparent;
     padding: 0px;
     font-size: 16px;
     border-width: 1px;
-    border-color: #000000;
-    color: #000000;
     border-style: solid;
+
+    background-color: transparent;
+    outline: 2px solid white;
+    color: white;
+    border: none;
+    font-family: "Noto Sans", "Noto Sans JP";
+    border-radius: 100vh;
+    padding: 5px;
+    vertical-align: top;
+    text-align: center;
+    width: 100%;
+    margin: 5px 0px 5px 0px;
 }
 
 .rd-input.rd-study {
