@@ -31,8 +31,7 @@ StudyPreload = async function()
 StudyLaunchSession = async function(session)
 {
     SessionData = session;
-    console.log(session);
-    SwapPage("page-study-config");
+    SwapPage("page-study-session-blocks");
 }
 
 SessionCreatorPreload = async function()
@@ -94,6 +93,7 @@ StudyPopulateSessionPicker = async function(directories)
     createSession.appendChild(csButton);
     container.appendChild(createSession);
 }
+
 /*
 Populates the deck picker based on a list of directories.
 Each directory should be that of a Tenori file.

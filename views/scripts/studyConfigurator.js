@@ -9,6 +9,8 @@ StudyConfigPreload = async function()
     await window.tenori.loadDeck(SessionData.properties.deck).then(async deck => {
         if(!deck)
             return alert("Error loading deck.");
+
+        deck.deck = deck.deck.slice(SessionData.properties.activeBlockStart, SessionData.properties.activeBlockEnd+1)
         
         /* Set the active deck variables to their defaults to prevent unexpected behavior. */
         SessionData.activeDeck = deck;
@@ -16,6 +18,7 @@ StudyConfigPreload = async function()
         SessionData.activeStudyMode = StudyModes.Meaning;
         SessionData.activePaginationMode = PaginationModes.Learn;
 
+        console.log(SessionData);
         await StudyInitDeck().then(async status => {
             if(!status)
                 return alert("Error initializing deck.")

@@ -1,0 +1,84 @@
+StudyBlocksPreload = async function()
+{
+    if(SessionData.blocks.list.length == 0)
+        StudyCreateBlock();
+
+    var container = document.getElementById("study-blocks-container");
+    container.innerHTML = "";
+
+    var index = 0;
+    for await(block of SessionData.blocks.list)
+    {
+        var panel = document.createElement("div");
+        panel.classList.add("rd-sessions", "rd-panel");
+        (function(index) {
+            panel.onclick = () => {
+                StudyLaunchBlock(index);
+            }
+        })(index);
+
+        var blockTitle = document.createElement("h1");
+        blockTitle.innerText = `Block ${index+1}`;
+        
+        var theDate = new Date(block.lastStudied);
+        var blockInfo = document.createElement("p");
+        blockInfo.classList.add("rd-sessions-info");
+        blockInfo.innerText = `Last studied ${theDate.toLocaleDateString()}, ${theDate.toLocaleTimeString()}`;
+
+        panel.appendChild(blockTitle);
+        panel.appendChild(blockInfo);
+        
+        container.appendChild(panel);
+        index++;
+    }
+
+    var createBlock = document.createElement("div");
+    var csButton = document.createElement("div");
+    csButton.classList.add("rd-sessions-plus");
+    createBlock.classList.add("rd-sessions", "rd-sessions-create", "rd-panel");
+    createBlock.id = "rd-blocks-create";
+
+    createBlock.appendChild(csButton);
+    container.appendChild(createBlock);
+
+    console.log(SessionData);   
+}
+
+StudyLaunchBlock = async function(blockIndex)
+{
+    if(SessionData.blocks.list.length == 0)
+        return false;
+
+    var start = 0;
+    var end = 0;
+    var index = 0;
+
+    for await (var block of SessionData.blocks.list)
+    {
+        if(blockIndex == index)
+            break;
+     
+        start+=block.size-1;   
+        index++;
+    }
+    var block = await SessionData.blocks.list[index];
+    end = start + block.size-1;
+    console.log(start + " to " + end);
+
+    SessionData.properties.activeBlockStart = start;
+    SessionData.properties.activeBlockEnd = end;
+    
+    SwapPage("page-study-config");
+}
+
+StudyCreateBlock = async function()
+{
+    SessionData.blocks.list.push(
+        {
+            size: SessionData.blocks.refBlockSize,
+            studyMode: 0,
+            paginationMode: 0,
+            lastStudied: Date.now()
+        }
+    );
+}
