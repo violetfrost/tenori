@@ -6,19 +6,19 @@ StudyRecapPreload = async function()
     var btn3 = document.getElementById("study-recap-button3");
 
     text.innerText =
-    (SessionData.activePaginationMode == PaginationModes.Learn)
+    (SessionData.active.paginationMode == PaginationModes.Learn)
     ? "Now that you've had a chance to look at all the Kanji, it's time to test what you've learned! It's okay if you don't feel 100% confident, just do your best to remember! If you'd like, you can also head back and review the Kanji again."
     : await StudyGetResultsString();
 
-    btn1.innerText = SessionData.activePaginationMode == PaginationModes.Learn
+    btn1.innerText = SessionData.active.paginationMode == PaginationModes.Learn
     ? "Go Back"
     : "Study Again";
 
-    btn2.innerText = SessionData.activePaginationMode == PaginationModes.Learn
+    btn2.innerText = SessionData.active.paginationMode == PaginationModes.Learn
     ? "Continue to Quiz"
     : "Repeat Quiz"
     
-    btn3.innerText = SessionData.activeStudyMode == StudyModes.Meaning
+    btn3.innerText = SessionData.active.studyMode == StudyModes.Meaning
     ? "Switch to Readings"
     : "Switch to Meanings";
 }
@@ -26,7 +26,7 @@ StudyRecapPreload = async function()
 StudyGetResultsString = async function()
 {
     var string = "Here's how you did: \n";
-    for await(element of SessionData.activeDeck.deck)
+    for await(element of SessionData.active.deck.list)
     {
         string+= `\n${(element.userInput.expected == element.userInput.actual) ? "✅" : "🚫"} - ${element.char} - Expected ${element.userInput.expected}, Got: ${element.userInput.actual}`
     }
@@ -35,19 +35,19 @@ StudyGetResultsString = async function()
 
 StudyReturn = async function()
 {
-    SessionData.activePaginationMode = PaginationModes.Learn;
+    SessionData.active.paginationMode = PaginationModes.Learn;
     SwapPage("page-study-pagination");
 }
 
 StudyContinue = async function()
 {
-    SessionData.activePaginationMode = PaginationModes.Quiz;
+    SessionData.active.paginationMode = PaginationModes.Quiz;
     SwapPage("page-study-pagination");
 }
 
 StudySwitchModes = async function()
 {
-    SessionData.activeStudyMode =
-    (SessionData.activeStudyMode === StudyModes.Meaning) ? StudyModes.Reading : StudyModes.Meaning; 
+    SessionData.active.studyMode =
+    (SessionData.active.studyMode === StudyModes.Meaning) ? StudyModes.Reading : StudyModes.Meaning; 
     SwapPage("page-study-pagination");
 }

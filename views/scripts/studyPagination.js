@@ -1,9 +1,9 @@
 StudyPaginationPreload = async function()
 {
-    if(!SessionData.activeDeck)
+    if(!SessionData.active.deck)
         return false;
     
-    SessionData.activeDeckIndex = 0;
+    SessionData.active.deck.index = 0;
 
     await StudyPopulatePage().then(result => {
         if(!result)
@@ -15,9 +15,9 @@ StudyPaginationPreload = async function()
                     if(event.key != "Enter")
                         return;
                     
-                    SessionData.activeDeck.deck[SessionData.activeDeckIndex].userInput.actual = this.value;
-                    StudyVerifyAnswer(SessionData.activeDeckIndex).then(result => {
-                        if(SessionData.activePaginationMode == PaginationModes.Learn && !result)
+                    SessionData.active.deck.list[SessionData.active.deck.index].userInput.actual = this.value;
+                    StudyVerifyAnswer(SessionData.active.deck.index).then(result => {
+                        if(SessionData.active.paginationMode == PaginationModes.Learn && !result)
                             return;
                         
                         StudyPaginationAdvance().then(result => {
@@ -42,25 +42,25 @@ StudyPaginationPreload = async function()
 
 StudyVerifyAnswer = async function(index)
 {
-    var element = SessionData.activeDeck.deck[index];
+    var element = SessionData.active.deck.list[index];
     return (element.userInput.expected == element.userInput.actual)
 }
 
 StudyPaginationAdvance = async function()
 {
-    if(SessionData.activeDeckIndex >= SessionData.activeDeck.deck.length -1)
+    if(SessionData.active.deck.index >= SessionData.active.deck.list.length -1)
         return false;
     
-    SessionData.activeDeckIndex++;
+    SessionData.active.deck.index++;
     return StudyPopulatePage();
 }
 
 StudyPaginationRetreat = async function()
 {
-    if(SessionData.activeDeckIndex == 0)
+    if(SessionData.active.deck.index == 0)
         return false;
     
-    SessionData.activeDeckIndex--;
+    SessionData.active.deck.index--;
     return StudyPopulatePage();
 }
 
@@ -69,7 +69,7 @@ Populates page based on active PaginationType and StudyMode.
 */
 StudyPopulatePage = async function()
 {
-    var element = SessionData.activeDeck.deck[SessionData.activeDeckIndex];
+    var element = SessionData.active.deck.list[SessionData.active.deck.index];
     if(!element) return false;
 
     var char = document.getElementById("study-char");
@@ -79,7 +79,7 @@ StudyPopulatePage = async function()
     var button = document.getElementById("study-pagination-retreat");
     var input  = document.getElementById("study-pagination-advance");
 
-    var expected = (SessionData.activeStudyMode == StudyModes.Meaning) /* If studying meanings, populate using the selected meaning. */ 
+    var expected = (SessionData.active.studyMode == StudyModes.Meaning) /* If studying meanings, populate using the selected meaning. */ 
     ? 
         element.apiData.meanings[element.meaning]
         : /* If using readings, get the selected meaning. */
@@ -90,19 +90,19 @@ StudyPopulatePage = async function()
     element.apiData.on_readings[element.reading]
 
     char.innerText = element.char;
-    sub1.innerText = (SessionData.activePaginationMode == PaginationModes.Learn) /* In Learn Mode, Populate Text */
+    sub1.innerText = (SessionData.active.paginationMode == PaginationModes.Learn) /* In Learn Mode, Populate Text */
     ? expected
     : "";
 
-    sub2.innerText = (SessionData.activePaginationMode == PaginationModes.Learn)
+    sub2.innerText = (SessionData.active.paginationMode == PaginationModes.Learn)
     ? element.mnemonic
     : "";
 
-    if(SessionData.activePaginationMode == PaginationModes.Learn)
+    if(SessionData.active.paginationMode == PaginationModes.Learn)
         button.classList.remove("hidden");
     else button.classList.add("hidden");
     
-    input.placeholder = SessionData.activeStudyMode == StudyModes.Meaning ? "English Meaning" : "Romaji or Kana";
+    input.placeholder = SessionData.active.studyMode == StudyModes.Meaning ? "English Meaning" : "Romaji or Kana";
     input.value = "";
     
     element.userInput.expected = expected; 

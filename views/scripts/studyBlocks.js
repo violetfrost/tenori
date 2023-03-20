@@ -1,13 +1,13 @@
 StudyBlocksPreload = async function()
 {
-    if(SessionData.blocks.list.length == 0)
+    if(SessionData.file.blocks.list.length == 0)
         StudyCreateBlock();
 
     var container = document.getElementById("study-blocks-container");
     container.innerHTML = "";
 
     var index = 0;
-    for await(block of SessionData.blocks.list)
+    for await(block of SessionData.file.blocks.list)
     {
         var panel = document.createElement("div");
         panel.classList.add("rd-sessions", "rd-panel");
@@ -46,14 +46,14 @@ StudyBlocksPreload = async function()
 
 StudyLaunchBlock = async function(blockIndex)
 {
-    if(SessionData.blocks.list.length == 0)
+    if(SessionData.file.blocks.list.length == 0)
         return false;
 
     var start = 0;
     var end = 0;
     var index = 0;
 
-    for await (var block of SessionData.blocks.list)
+    for await (var block of SessionData.file.blocks.list)
     {
         if(blockIndex == index)
             break;
@@ -61,21 +61,20 @@ StudyLaunchBlock = async function(blockIndex)
         start+=block.size-1;   
         index++;
     }
-    var block = await SessionData.blocks.list[index];
-    end = start + block.size-1;
-    console.log(start + " to " + end);
+    end = start + SessionData.file.blocks.list[index].size-1;
 
-    SessionData.properties.activeBlockStart = start;
-    SessionData.properties.activeBlockEnd = end;
+    SessionData.active.block.index = index;
+    SessionData.active.block.start = start;
+    SessionData.active.block.end = end;
     
     SwapPage("page-study-config");
 }
 
 StudyCreateBlock = async function()
 {
-    SessionData.blocks.list.push(
+    SessionData.file.blocks.list.push(
         {
-            size: SessionData.blocks.refBlockSize,
+            size: SessionData.file.blocks.refBlockSize,
             studyMode: 0,
             paginationMode: 0,
             lastStudied: Date.now()

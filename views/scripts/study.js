@@ -1,10 +1,13 @@
 const StudyModes = { Meaning: 0, Reading: 1 }
 const PaginationModes = { Quiz: 0, Learn: 1}
 var SessionData = {
-    activeDeck: undefined,
-    activeDeckIndex: 0,
-    activeStudyMode: StudyModes.Meaning,
-    activePaginationMode: PaginationModes.Learn
+    active: {
+        deck: {},
+        block: {},
+        studyMode: StudyModes.Meaning,
+        paginationMode: PaginationModes.Learn
+    },
+    file: {}
 }
 
 var prefs = {};
@@ -30,7 +33,8 @@ StudyPreload = async function()
 
 StudyLaunchSession = async function(session)
 {
-    SessionData = session;
+    SessionData.file = session;
+    console.log(SessionData);
     SwapPage("page-study-session-blocks");
 }
 
@@ -134,10 +138,10 @@ Initialize the active deck for studying by getting data from kanjiapi.
 */
 StudyInitDeck = async function()
 {
-    if(!SessionData.activeDeck || !SessionData.activeDeck.deck)
+    if(!SessionData.active.deck || !SessionData.active.deck.list)
         return false;
     
-    for await (const element of SessionData.activeDeck.deck)
+    for await (const element of SessionData.active.deck.list)
     {
         await ResolveKanjiData(element.char).then(result => {            
             if(!element)
@@ -166,8 +170,8 @@ Force re-initialization of study page.
 */
 StudyForceReset = function()
 {
-    SessionData.activeDeck = undefined;
-    SessionData.activeDeckIndex = undefined;
+    SessionData.active.deck.list = undefined;
+    SessionData.active.deck.index = undefined;
 
     SwapPage("page-study");
 }

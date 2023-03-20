@@ -3,20 +3,20 @@ Study Config Preload, called when a deck is selected and needs to be configured.
 */
 StudyConfigPreload = async function()
 {
-    if(!SessionData.properties.deck)
+    if(!SessionData.file.properties.deck)
         return alert("Error.");
 
-    await window.tenori.loadDeck(SessionData.properties.deck).then(async deck => {
+    await window.tenori.loadDeck(SessionData.file.properties.deck).then(async deck => {
         if(!deck)
             return alert("Error loading deck.");
 
-        deck.deck = deck.deck.slice(SessionData.properties.activeBlockStart, SessionData.properties.activeBlockEnd+1)
-        
+        deck.list = deck.list.slice(SessionData.active.block.start, SessionData.active.block.end+1)
+
         /* Set the active deck variables to their defaults to prevent unexpected behavior. */
-        SessionData.activeDeck = deck;
-        SessionData.activeDeckIndex = 0;
-        SessionData.activeStudyMode = StudyModes.Meaning;
-        SessionData.activePaginationMode = PaginationModes.Learn;
+        SessionData.active.deck = deck;
+        SessionData.active.deck.index = 0;
+        SessionData.active.studyMode = StudyModes.Meaning;
+        SessionData.active.paginationMode = PaginationModes.Learn;
 
         console.log(SessionData);
         await StudyInitDeck().then(async status => {
@@ -35,18 +35,18 @@ TODO: Clean this up, make it more efficient.
 */
 StudyPopulateConfigurator = async function()
 {
-    if(!SessionData.activeDeck.deck || !SessionData.activeDeck.deck)
+    if(!SessionData.active.deck)
         return false;
     
-    document.getElementById("study-configurator-name").innerText = SessionData.activeDeck.properties.name;
-    document.getElementById("study-configurator-author").innerText = `by ${SessionData.activeDeck.properties.author}`;
-    document.getElementById("study-configurator-description").innerText = SessionData.activeDeck.properties.description;
+    document.getElementById("study-configurator-name").innerText = SessionData.active.deck.properties.name;
+    document.getElementById("study-configurator-author").innerText = `by ${SessionData.active.deck.properties.author}`;
+    document.getElementById("study-configurator-description").innerText = SessionData.active.deck.properties.description;
     
     var container = document.getElementById("study-configurator-panels");
     container.innerHTML = "";
     
     var index = 0;
-    for await(const element of SessionData.activeDeck.deck)
+    for await(const element of SessionData.active.deck.list)
     {
         if(!element.apiData || element.apiData.error == true)
             return;
@@ -148,10 +148,10 @@ StudySubmitConfigurator = function()
         /* Get Preferred Reading */
         var reading = Array.from(form.querySelector("#reading").options).filter(o => o.selected)[0];
 
-        SessionData.activeDeck.deck[i].meaning = meaning;
-        SessionData.activeDeck.deck[i].kunYomi = reading.dataset.kunyomi === "true" ? true : false;
-        SessionData.activeDeck.deck[i].reading = reading.value;
-        SessionData.activeDeck.deck[i].mnemonic = mnemonic; 
+        SessionData.active.deck.list[i].meaning = meaning;
+        SessionData.active.deck.list[i].kunYomi = reading.dataset.kunyomi === "true" ? true : false;
+        SessionData.active.deck.list[i].reading = reading.value;
+        SessionData.active.deck.list[i].mnemonic = mnemonic; 
     }
 
     console.log(SessionData);
