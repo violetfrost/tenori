@@ -18,7 +18,8 @@ const createWindow = () => {
       autoHideMenuBar: true,
       webPreferences: {
         preload: path.join(app.getAppPath(), 'utils/preload.js')
-      }
+      },
+      icon: __dirname + "/tenori.ico"
     })
 
     win.on('unmaximize', () => {win.webContents.send('tenori-titlebar-on', {maximized: false})});
