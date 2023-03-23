@@ -51,12 +51,13 @@ SessionCreatorPreload = async function()
 StudySubmitSession = async function()
 {
     var sessionName = await document.getElementById("study-session-input-name").value;
+    var blockLength = await Number(await document.getElementById("study-session-block-length").value);
     var sessionDeck = await document.querySelector('input[name="study-session-input-deck"]:checked').value;
 
     if(!sessionName || sessionName == "" || !sessionDeck)
         return false;
     
-    await window.tenori.createSession(sessionName, sessionDeck, prefs.app.sessionFolder).then(async session => {
+    await window.tenori.createSession(sessionName, blockLength, sessionDeck, prefs.app.sessionFolder).then(async session => {
         if(!session)
             return false;
        

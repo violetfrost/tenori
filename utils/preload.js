@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('tenori', {
         createSortedDeck: async (text) => ipcRenderer.invoke('tenori-create-sorted-deck', { text: text }),
         listDecks: async ( directory ) => ipcRenderer.invoke('tenori-list-decks', {directory: directory}),
         loadSession: async (directory) => ipcRenderer.invoke('tenori-load-session', { directory: directory }),
-        createSession: async (name, deck, directory ) => ipcRenderer.invoke('tenori-create-session', { name: name, deck: deck, directory: directory }),
+        createSession: async (name, blockLength, deck, directory ) => ipcRenderer.invoke('tenori-create-session', { name: name, blockLength: blockLength, deck: deck, directory: directory }),
         listSessions: async( directory ) => ipcRenderer.invoke('tenori-list-sessions', {directory: directory}),
         getPrefs: async() => ipcRenderer.invoke('tenori-get-prefs'),
         titlebarEvent: async( type ) => ipcRenderer.invoke('tenori-titlebar-event', {type: type}),

@@ -6,6 +6,8 @@
         <p class="rd-content-text">A study session keeps track of your progress throughout a deck. You can create as many as you want, and each one is managed independently! This means that if multiple people use your computer, you can each learn at your own pace.</p>
         <label for="study-session-input-name">Session Name</label>
         <input id="study-session-input-name" class="rd-input" placeholder="Session Name"></input>
+        <label for="study-session-block-length">Block Length</label>
+        <input id="study-session-block-length" class="rd-input" type="number" min="1" placeholder="Block Length" value="10"></input>
         <label for="study-picker-container">Deck</label>
         <div class="rd-sessions-container" id="study-picker-container">
             <input class="rd-sessions-input" id="input-1" type="radio" name="study-picker" value="option1">
@@ -17,8 +19,6 @@
                 <h1>Example 2</h1>
             </label>
           </div>
-          
-          
         <div class="rd-align-left" style="margin-top: 10px;">
             <button class="rd-button" id="sessions-creator-cancel">Cancel</button>
             <button class="rd-button" id="sessions-creator-submit">Create Session</button>

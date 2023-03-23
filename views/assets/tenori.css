@@ -42,6 +42,10 @@ html,body
 {
     background: #808080;
 }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    display: none;
+}
 /*
 FONTS
 */

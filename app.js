@@ -167,7 +167,7 @@ ipcMain.handle('tenori-create-session', async (event, args) => {
             name: args.name,
             deck: args.deck
         }, blocks: {
-            refBlockSize: 5,
+            refBlockSize: args.blockLength,
             list: []
         }
     }

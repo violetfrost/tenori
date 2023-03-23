@@ -3,29 +3,24 @@ Study Config Preload, called when a deck is selected and needs to be configured.
 */
 StudyConfigPreload = async function()
 {
-    if(!SessionData.file.properties.deck)
+    if(!SessionData.active.deck)
         return alert("Error.");
 
-    await window.tenori.loadDeck(SessionData.file.properties.deck).then(async deck => {
-        if(!deck)
-            return alert("Error loading deck.");
+    SessionData.active.deck.list = await SessionData.active.deck.list.slice(
+        SessionData.active.block.start,
+        SessionData.active.block.end+1
+    );
 
-        deck.list = deck.list.slice(SessionData.active.block.start, SessionData.active.block.end+1)
-
-        /* Set the active deck variables to their defaults to prevent unexpected behavior. */
-        SessionData.active.deck = deck;
-        SessionData.active.deck.index = 0;
-        SessionData.active.studyMode = StudyModes.Meaning;
-        SessionData.active.paginationMode = PaginationModes.Learn;
-
-        console.log(SessionData);
-        await StudyInitDeck().then(async status => {
-            if(!status)
-                return alert("Error initializing deck.")
-            
-            /* We're finally ready to populate the configurator. */
-            await StudyPopulateConfigurator();
-        })
+    document.getElementById("study-configurator-sub").innerText = `Block ${SessionData.active.block.index + 1} | ` +
+    `${SessionData.active.paginationMode == PaginationModes.Learn ? "Learning" : "Quizzing"} ` +
+    `${SessionData.active.studyMode == StudyModes.Meaning ? "Meanings" : "Readings"}`;
+    
+    await StudyInitDeck().then(async status => {
+        if(!status)
+            return alert("Error initializing deck.")
+        
+        /* We're finally ready to populate the configurator. */
+        await StudyPopulateConfigurator();
     })
 }
 
@@ -37,10 +32,6 @@ StudyPopulateConfigurator = async function()
 {
     if(!SessionData.active.deck)
         return false;
-    
-    document.getElementById("study-configurator-name").innerText = SessionData.active.deck.properties.name;
-    document.getElementById("study-configurator-author").innerText = `by ${SessionData.active.deck.properties.author}`;
-    document.getElementById("study-configurator-description").innerText = SessionData.active.deck.properties.description;
     
     var container = document.getElementById("study-configurator-panels");
     container.innerHTML = "";
